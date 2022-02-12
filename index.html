@@ -80,7 +80,11 @@
                             <td colspan="2" style="text-align: center;">
                                 <br />
                                 <button onclick="startpuzzle()">Start</button>
-                                <button>Stop</button>
+                                <button onclick="stoppuzzle()">Stop</button>
+                                <br />
+                                <label id="timespent"></label>
+                                <br />
+                                <label id="movecount"></label>
                             </td>
                         </tr>
                     </table>
@@ -93,6 +97,9 @@
     </div>
 
     <script>
+        let isrunning = false;
+        let timespent = 0;
+        let movecount = 0;
         let images = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         let blankimage = "12.jpg";
         let nodes = [
@@ -144,14 +151,16 @@
             else
                 withnode = nodes[blanknode - 1][3];
             
-            console.log(blanknode + " " + withnode);
-            if(withnode != 0){
-                let blankpath = document.getElementById("img" + blanknode).src;
-                document.getElementById("img" + blanknode).src = document.getElementById("img" + withnode).src;
-                document.getElementById("img" + withnode).src = blankpath;
+            if(isrunning){
+                if(withnode != 0){
+                    let blankpath = document.getElementById("img" + blanknode).src;
+                    document.getElementById("img" + blanknode).src = document.getElementById("img" + withnode).src;
+                    document.getElementById("img" + withnode).src = blankpath;
+                    movecount++;
+                    document.getElementById("movecount").innerHTML = "Move Count: " + movecount;
+                }
+                verification();
             }
-
-            verification();
             
         }
 
@@ -196,6 +205,34 @@
         {            
             images = shuffle(images);
             assignimages();
+            timespent = 0;
+            movecount = 0;
+            isrunning = true;
+        }
+
+        function stoppuzzle(){
+            isrunning = false;
+        }
+
+        setInterval(()=>{
+            if(isrunning){
+                timespent++;
+                var date = new Date(0);
+                date.setSeconds(timespent); // specify value for SECONDS here
+                var timeString = date.toISOString().substr(11, 8);
+                document.getElementById("timespent").innerHTML = "Time Spent: " + timeString;
+            }
+        }, 1000);
+         
+        document.onkeydown = function(){
+            if(event.keyCode == 37)
+                shift("left");
+            else if(event.keyCode == 38)
+                shift("top");
+            else if(event.keyCode == 39)
+                shift("right");
+            else if(event.keyCode == 40)
+                shift("bottom");
         }
     </script>
 </body>
