@@ -150,7 +150,28 @@
                 document.getElementById("img" + blanknode).src = document.getElementById("img" + withnode).src;
                 document.getElementById("img" + withnode).src = blankpath;
             }
+
+            verification();
             
+        }
+
+        function verification()
+        {
+            let verified = true;
+            for (let i = 1; i <= 12; i++) {
+                let img = document.getElementById("img" + i);
+                let src = img.src;
+                let paths = src.split("/");
+                let imgno = Number(paths[paths.length - 1].replace(".jpg", ""));
+                if(imgno != i){
+                    verified = false;
+                    break;
+                }                
+            }
+            if(verified)
+            {
+                alert("Success");
+            }
         }
 
         function shuffle(array) {
